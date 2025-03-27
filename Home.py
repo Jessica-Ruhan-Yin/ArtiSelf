@@ -2,7 +2,7 @@ import altair as alt
 import numpy as np
 import pandas as pd
 import streamlit as st
-from utils.styles import style_sidebar
+from styles.styles import style_sidebar
 
 # title of the homepage
 st.set_page_config(
