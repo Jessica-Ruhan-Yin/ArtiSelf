@@ -1,5 +1,5 @@
 import streamlit as st
-from styles.styles import style_sidebar
+from styles.styles import style_global
 
 # Style the sidebar
-st.markdown(style_sidebar, unsafe_allow_html=True)
+st.markdown(style_global, unsafe_allow_html=True)

@@ -4,7 +4,7 @@ from langchain_huggingface import HuggingFaceEndpoint
 from langgraph.graph import StateGraph, END
 import os
 from dotenv import load_dotenv
-from utils.image_generator import ImageGenerator
+from utils.replicate_image_generator import ImageGenerator
 
 # Load environment variables
 load_dotenv()
