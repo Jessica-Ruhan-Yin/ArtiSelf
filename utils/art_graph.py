@@ -1,14 +1,14 @@
 from typing import List, TypedDict
 from langchain.schema import BaseMessage, HumanMessage, AIMessage
-from langchain_huggingface import HuggingFaceEndpoint
 from langgraph.graph import StateGraph, END
 import os
 from dotenv import load_dotenv
-from utils.replicate_image_generator import ImageGenerator
+import replicate
+from utils.image_generators.replicate_image_generator import ImageGenerator
 
 # Load environment variables
 load_dotenv()
-HUGGINGFACEHUB_API_TOKEN = os.getenv("HUGGINGFACEHUB_API_TOKEN")
+REPLICATE_API_TOKEN = os.environ.get("REPLICATE_API_TOKEN")
 
 # Define the state schema
 class GraphState(TypedDict):
@@ -17,15 +17,11 @@ class GraphState(TypedDict):
     current_image_url: str
     iteration: int
 
-# Initialize the LLM
+# Initialize the Replicate client and model
 def get_llm():
-    repo_id = "mistralai/Mistral-7B-Instruct-v0.2"
-    llm = HuggingFaceEndpoint(
-        repo_id=repo_id,
-        temperature=0.5,
-        huggingfacehub_api_token=HUGGINGFACEHUB_API_TOKEN,
-    )
-    return llm
+    if not REPLICATE_API_TOKEN:
+        raise ValueError("REPLICATE_API_TOKEN environment variable is not set")    
+    return replicate.Client(api_token=REPLICATE_API_TOKEN)
 
 # Define tools
 tools = []
@@ -33,12 +29,12 @@ tools = []
 # Define the nodes for the graph
 def concept_development(state: GraphState) -> GraphState:
     """Refine the initial concept provided by the user."""
-    llm = get_llm()
+    client = get_llm()
     
     messages = state["messages"]
     concept = state["art_concept"]
     
-    # Prompt the LLM to refine the art concept
+    # Prompt to refine the art concept
     prompt = f"""
     I need to create an artistic concept based on this initial idea: {concept}
     
@@ -52,18 +48,22 @@ def concept_development(state: GraphState) -> GraphState:
     Provide a detailed description that could be used as a prompt for image generation.
     """
     
-    # TODO: Uncomment the following lines to use the LLM in production
-    # response = llm.invoke([HumanMessage(content=prompt)])
-    # refined_concept = response
-    refined_concept = """
-    A surreal underwater cityscape, where futuristic buildings float effortlessly in the deep ocean. The architecture blends organic and sci-fi elements, with translucent domes, spiraling towers, and coral-inspired structures. The city glows with soft, ethereal light from within, casting colorful reflections across the surrounding water. Swarms of bioluminescent sea creatures—jellyfish, manta rays, and fish with glowing patterns—drift gracefully through the scene. Giant kelp-like plants sway gently with the current, their tips sparkling with phosphorescence. In the distance, a glowing abyss adds depth and mystery.
+    # Run the Granite model from Replicate
+    output = client.run(
+        "ibm-granite/granite-3.1-8b-instruct",
+        input={
+            "prompt": prompt,
+            "max_new_tokens": 500,
+            "temperature": 0.7,
+            "top_p": 0.9,
+        }
+    )
     
-    Style: Highly detailed digital painting, with elements of surrealism and dreamlike fantasy. The mood is calm, mysterious, and otherworldly.
-    
-    Color palette: Deep ocean blues, glowing teals, purples, and soft neon highlights in cyan, pink, and gold.
-    
-    Composition: Wide panoramic view showing multiple floating buildings at different heights, with sea creatures moving in layers from foreground to background. Light rays filter through the water from above, creating a magical, layered atmosphere.
-    """
+    # Convert the output to a string if it's not already
+    if isinstance(output, list):
+        refined_concept = "".join(output)
+    else:
+        refined_concept = str(output)
     
     # Update the state with the refined concept and messages
     state["art_concept"] = refined_concept
