@@ -19,7 +19,7 @@ st.markdown("<p style='text-align: center; font-size: 1.2rem;'>Begin your artist
 # Input section
 st.header("Your Artistic Concept")
 art_concept = st.text_area(
-    "Describe your artistic idea or concept:", 
+    "Describe your artistic idea or concept:",
     help="For example: A surreal underwater cityscape with floating buildings and bioluminescent sea creatures",
     height=150
 )
@@ -36,7 +36,7 @@ if st.button("Generate Artwork"):
             col1, col2 = st.columns(2)
             with col1:
                 st.header("Refined Concept")
-                st.write(refined_concept)
+                st.text_area(label="Refine Concept", value=refined_concept, height=512, label_visibility="collapsed")
             with col2:
                 st.header("Generated Artwork")
                 try:

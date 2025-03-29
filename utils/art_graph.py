@@ -45,15 +45,15 @@ def concept_development(state: GraphState) -> GraphState:
     - Color palette
     - Composition
     
-    Provide a detailed description that could be used as a prompt for image generation.
+    Provide a description of around 150 words that could be used as a prompt for image generation.
     """
     
     # Run the Granite model from Replicate
     output = client.run(
-        "ibm-granite/granite-3.1-8b-instruct",
+        "ibm-granite/granite-3.2-8b-instruct",
         input={
             "prompt": prompt,
-            "max_new_tokens": 500,
+            "max_new_tokens": 250,
             "temperature": 0.7,
             "top_p": 0.9,
         }

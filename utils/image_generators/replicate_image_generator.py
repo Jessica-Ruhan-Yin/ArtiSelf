@@ -25,7 +25,6 @@ class ImageGenerator:
             str: Local file path to the saved image.
         """
         try:
-            print("Generating image using Replicate API with prompt:", prompt)
             output = replicate.run(
                 "black-forest-labs/flux-schnell",
                 input={
