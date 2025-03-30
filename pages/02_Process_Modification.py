@@ -22,26 +22,6 @@ def display_title():
         unsafe_allow_html=True
     )
 
-# --- Check for Existing Artwork ---
-def check_artwork_history():
-    if "art_history" not in st.session_state or not st.session_state.art_history:
-        st.markdown(
-            """
-            <div style="padding: 20px; background-color: #f8f9fa; border-radius: 10px; text-align: center; margin: 20px 0px;">
-                <h3 style="color: #495057; margin-bottom: 15px;">No Artwork Found</h3>
-                <p style="color: #6c757d; margin-bottom: 20px;">
-                    Please create an initial artwork before using the Process Modification Engine.
-                </p>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-        col1, col2, col3 = st.columns([1, 2, 1])
-        with col2:
-            if st.button("Go to Create Artworks", use_container_width=True, type="primary"):
-                st.switch_page("pages/01_Create_Artworks.py")
-        st.stop()
-
 # --- Artwork Display Functions ---
 def display_artwork(title, artwork):
     st.header(title)
@@ -56,24 +36,6 @@ def display_artwork(title, artwork):
         st.subheader("Image")
         st.image(artwork["image_url"], caption=f"Iteration {artwork['iteration']}")
         st.markdown('</div>', unsafe_allow_html=True)
-
-def display_art_history(history):
-    st.header("Artistic Evolution")
-    st.write(f"Your artwork has gone through {len(history)} iterations.")
-    
-    st.markdown('<div class="timeline-tabs">', unsafe_allow_html=True)
-    tabs = st.tabs([f"Iteration {i}" for i in range(len(history))])
-    for i, (tab, artwork) in enumerate(zip(tabs, history)):
-        with tab:
-            col1, col2 = st.columns(2)
-            with col1:
-                st.image(artwork["image_url"], caption=f"Iteration {i}")
-            with col2:
-                mod_type = artwork.get('modification_type') or "N/A"
-                title = "Initial Creation" if i == 0 else f"Modification: {mod_type.replace('_', ' ').title()}"
-                st.subheader(title)
-                st.text_area(label="Refined Concept History", value=artwork["concept"], height=512, label_visibility="collapsed")
-    st.markdown('</div>', unsafe_allow_html=True)
 
 # --- Modification Options & Interaction ---
 def display_modification_options(mod_options, strategy_desc):
@@ -139,8 +101,6 @@ def display_modification_result(result):
     with col1:
         st.header("Modified Concept")
         st.text_area(label="Refined Concept", value=result["refined_concept"], height=512, label_visibility="collapsed")
-        st.subheader("Modification Approach")
-        st.write(f"Strategy: {result['modification_type'].replace('_', ' ').title()}")
     with col2:
         st.header("New Artwork")
         if os.path.exists(result["current_image_url"]):
@@ -152,8 +112,6 @@ def display_modification_result(result):
 def main():
     configure_page()
     display_title()
-    check_artwork_history()
-    
     latest_artwork = st.session_state.art_history[-1]
     display_artwork("Current Artwork", latest_artwork)
     
@@ -236,9 +194,6 @@ def main():
         with st.spinner("Applying artistic process modification..."):
             result = apply_modification(latest_artwork, selected_strategy, user_feedback)
             display_modification_result(result)
-    
-    if len(st.session_state.art_history) > 1:
-        display_art_history(st.session_state.art_history)
 
 if __name__ == "__main__":
     main()
