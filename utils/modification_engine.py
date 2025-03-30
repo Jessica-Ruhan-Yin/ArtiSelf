@@ -58,32 +58,38 @@ def _process_modification(state: ModificationState, prompt: str, temperature: fl
 # MODIFICATION STRATEGIES
 # ===============================
 def no_modification(state: ModificationState) -> ModificationState:
-    """Strategy 1: Reproduce previous work without changes."""
-    state["messages"].append(AIMessage(content="Applying no modification strategy - reproducing previous work."))
+    """Strategy: Reproduce - Create a similar version of your current artwork."""
+    state["messages"].append(AIMessage(content="Applying reproduction strategy - creating a refined version of your current artwork."))
     return state
 
 
 def unsystematic_change(state: ModificationState) -> ModificationState:
-    """Strategy 2: Introduce random, unpredictable modifications."""
+    """Strategy: Experimental Play - Introduce random, unexpected elements."""
     current_concept = state["refined_concept"]
     prompt = f"""
-Take this artistic concept and introduce random, unpredictable modifications:
+Take this artistic concept and introduce playful, experimental modifications:
 
 Original concept: {current_concept}
 
-Introduce elements of chance, randomness, or unexpected juxtapositions. The changes should be unsystematic rather than following a clear pattern.
+Create a playful variation by:
+1. Introducing unexpected elements or combinations
+2. Experimenting with chance operations or randomness
+3. Breaking conventional patterns or expectations
+4. Allowing for spontaneity and discovery
+
+The changes should feel fresh and surprising while maintaining a connection to the original concept.
     """
     return _process_modification(state, prompt, temperature=0.9)
 
 
 def idea_based_change(state: ModificationState) -> ModificationState:
-    """Strategy 3: Evolve the concept by building on previous ideas."""
+    """Strategy: Build on Previous Ideas - Develop concepts from your artistic journey."""
     current_concept = state["refined_concept"]
     # Use the last three iterations from history for context
     previous_ideas = [entry.get("concept", "") for entry in state["modification_history"] if "concept" in entry]
     previous_ideas_text = "\n".join(previous_ideas[-3:])
     prompt = f"""
-Develop a new artistic concept based on ideas from previous iterations:
+Develop a new artistic concept by building on ideas from your creative journey:
 
 Current concept: {current_concept}
 
@@ -91,93 +97,97 @@ Previous concepts and ideas:
 {previous_ideas_text}
 
 Create a new concept that:
-1. Builds upon elements or themes from previous iterations
-2. Combines or transforms these elements in new ways
-3. Develops the artistic direction based on the trajectory of previous works
-4. Creates meaningful connections to the artistic journey so far
+1. Identifies compelling elements or themes from your previous works
+2. Combines or transforms these elements in fresh, meaningful ways
+3. Builds natural connections to your artistic evolution
+4. Takes your creative exploration to its next logical step
+
+This should feel like a natural progression in your artistic development.
     """
     return _process_modification(state, prompt, temperature=0.7)
 
 
 def quantitative_modification(state: ModificationState) -> ModificationState:
-    """Strategy 4: Modify quantitative aspects (size, scale, materials)."""
+    """Strategy: Change Scale or Materials - Modify proportions, textures, or elements."""
     current_concept = state["refined_concept"]
     prompt = f"""
-Modify this artistic concept by changing quantitative aspects such as size, scale, proportions, or materials:
+Transform this artistic concept by changing scale, proportions, or material qualities:
 
 Current concept: {current_concept}
 
-Make quantitative modifications such as:
-1. Changing the scale or size of elements
-2. Altering the number or density of components
-3. Shifting proportions or ratios between elements
-4. Modifying material properties (texture, weight, transparency)
-5. Adjusting color intensity, saturation, or contrast
+Consider modifications such as:
+1. Dramatically changing the scale or size of elements
+2. Altering the density, quantity, or arrangement of components
+3. Playing with new proportions or spatial relationships
+4. Exploring different textures, weights, or material qualities
+5. Shifting color relationships, contrasts, or temperature
 
-Keep the core artistic approach and subject matter the same while transforming these quantitative aspects.
+Keep the core subject and concept intact while transforming these physical aspects.
     """
     return _process_modification(state, prompt, temperature=0.6)
 
 
 def subject_modification(state: ModificationState) -> ModificationState:
-    """Strategy 5: Change the subject while preserving the artistic approach."""
+    """Strategy: New Subject, Same Style - Apply your technique to different content."""
     current_concept = state["refined_concept"]
     prompt = f"""
-Transform this artistic concept by changing the subject while maintaining the same artistic approach:
+Apply your current artistic approach to an entirely new subject:
 
 Current concept: {current_concept}
 
-Steps:
-1. Identify the current subject and artistic technique/style
-2. Replace the subject with a new one that creates interesting tensions or relationships
-3. Apply the same artistic treatment to this new subject
-4. Ensure the new concept maintains the same level of detail and technical approach
+To create this transformation:
+1. Identify the essential style, technique and treatment in your current artwork
+2. Select a completely different subject matter that would create interesting tension or harmony
+3. Apply your established artistic approach to this new subject
+4. Maintain the same level of complexity and technical approach
 
-Provide a detailed revised concept that changes only the subject matter while preserving the artistic methodology.
+This should feel like seeing your artistic voice applied to fresh content.
     """
     return _process_modification(state, prompt, temperature=0.7)
 
 
 def subject_with_method_refinement(state: ModificationState) -> ModificationState:
-    """Strategy 6: Change the subject and apply minor methodological refinements."""
+    """Strategy: New Subject with Style Refinements - Evolve both content and technique."""
     current_concept = state["refined_concept"]
     prompt = f"""
-Transform this artistic concept by changing the subject and making minor refinements to the methodology:
+Transform both your subject matter and refine your artistic technique:
 
 Current concept: {current_concept}
 
-Steps:
-1. Identify the current subject and artistic technique/style
-2. Replace the subject with a new one that creates interesting tensions or relationships
-3. Apply the same general artistic approach but with subtle refinements that enhance the treatment of the new subject
-4. Consider how small methodological adjustments can better serve the new subject matter
+Create this evolution by:
+1. Identifying the core stylistic elements of your current approach
+2. Selecting a new subject matter that offers fresh creative possibilities
+3. Making thoughtful refinements to your technique that enhance the treatment of this new subject
+4. Allowing the new subject to inspire subtle shifts in your artistic approach
 
-Provide a detailed revised concept that changes both the subject matter and makes minor refinements to the artistic methodology.
+This should feel like a natural evolution of both what you create and how you create it.
     """
     return _process_modification(state, prompt, temperature=0.7)
 
 
 def structure_modification(state: ModificationState) -> ModificationState:
-    """Strategy 7: Develop a new methodology aligned with the core concept."""
+    """Strategy: New Approach, Same Theme - Reimagine your method while keeping the concept."""
     current_concept = state["refined_concept"]
     original_concept = state["original_concept"]
     prompt = f"""
-Take this artistic concept and develop a new methodological structure while maintaining the core concept:
+Reimagine your artistic approach while maintaining your core thematic focus:
 
 Original concept: {original_concept}
 Current concept: {current_concept}
 
-Reimagine the artistic approach by:
-1. Identifying the core thematic elements
-2. Developing a new visual language or compositional structure
-3. Maintaining conceptual integrity while transforming the execution
-4. Creating a cohesive new methodology that aligns with the original artistic intent
+Create this transformation by:
+1. Identifying the essential themes and conceptual elements that define your work
+2. Developing a completely new visual language or methodological approach
+3. Thinking about how artists like Matisse evolved from painting to paper cut-outs
+4. Maintaining thematic integrity while dramatically shifting execution
+
+This should feel like seeing your artistic vision through an entirely new lens.
     """
     return _process_modification(state, prompt, temperature=0.7)
 
 
 def concept_modification(state: ModificationState) -> ModificationState:
-    """Strategy 8: Form a new art concept that marks significant evolution."""
+    """Strategy: Artistic Breakthrough - Create something significantly new but connected."""
     original_concept = state["original_concept"]
     current_concept = state["refined_concept"]
     # Summarize last three modification entries for context
@@ -188,22 +198,21 @@ def concept_modification(state: ModificationState) -> ModificationState:
         concept_summary = (concept_snippet[:100] + "...") if len(concept_snippet) > 100 else concept_snippet
         history_summary += f"- {mod_type}: {concept_summary}\n"
     prompt = f"""
-Create a new artistic concept that represents a significant evolution from the current direction:
+Create a breakthrough artistic concept that represents significant creative evolution:
 
 Original concept: {original_concept}
 Current concept: {current_concept}
 
-Artistic journey so far:
+Your artistic journey so far:
 {history_summary}
 
-Develop a new concept that:
-1. Represents a meaningful conceptual advancement
-2. Builds upon insights gained from previous iterations
-3. Introduces a new creative vision or thematic direction
-4. Maintains a connection to the original artistic intent
-5. Suggests innovative technical approaches suitable for the new concept
+Create a breakthrough by:
+1. Identifying the deeper meaning or purpose driving your artistic exploration
+2. Making a bold conceptual leap that still connects to your creative journey
+3. Introducing innovative approaches that push your artistic boundaries
+4. Reimagining your artistic voice while maintaining authenticity
 
-Create a detailed concept that demonstrates artistic growth and conceptual evolution.
+This should feel like a significant moment of creative growth and discovery, similar to Picasso's transition to Cubism or Kandinsky's move to abstraction.
     """
     return _process_modification(state, prompt, temperature=0.8)
 

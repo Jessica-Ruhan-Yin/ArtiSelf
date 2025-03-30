@@ -1,5 +1,5 @@
 import streamlit as st
-from styles.styles import style_global
+from styles.styles import style_global, style_buttons
 from utils.art_graph import generate_artwork
 import os
 
@@ -10,7 +10,7 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded",
 )
-st.markdown(style_global, unsafe_allow_html=True)
+st.markdown(style_global + style_buttons, unsafe_allow_html=True)
 
 # Page title and introduction
 st.title("Create Artworks")
@@ -25,7 +25,7 @@ art_concept = st.text_area(
 )
 
 # Image generation button
-if st.button("Generate Artwork"):
+if st.button("Generate Artwork", type="primary"):
     if art_concept:
         with st.spinner("Creating your artwork..."):
             result = generate_artwork(art_concept)

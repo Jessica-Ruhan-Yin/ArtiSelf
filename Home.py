@@ -2,7 +2,7 @@ import altair as alt
 import numpy as np
 import pandas as pd
 import streamlit as st
-from styles.styles import style_global
+from styles.styles import style_global, style_buttons
 
 # Set page configuration for the homepage
 st.set_page_config(
@@ -12,7 +12,7 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-st.markdown(style_global, unsafe_allow_html=True)
+st.markdown(style_global + style_buttons, unsafe_allow_html=True)
 
 # Title section
 st.markdown("""
@@ -23,6 +23,6 @@ st.markdown("""
         </p>
     </div>
 """, unsafe_allow_html=True)
-if st.button("Start Creating Now"):
+if st.button("Start Creating Now", type="primary"):
     # Redirect to the Create Artworks page
     st.switch_page("pages/01_Create_Artworks.py")
