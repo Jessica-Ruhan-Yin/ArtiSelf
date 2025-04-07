@@ -70,9 +70,10 @@ class TimelineVisualization:
                                 st.write(f"**Strategy**: {self.format_modification_type(iteration_idx, artwork)}")
                                 st.write("**Concept:**")
                                 st.text_area("", value=artwork.get("concept", ""),
-                                             height=100,
-                                             label_visibility="collapsed",
-                                             disabled=True)
+                                    height=100,
+                                    label_visibility="collapsed",
+                                    disabled=True,
+                                    key=f"grid_concept_{iteration_idx}_{r}_{c}")  # Add unique key
 
     def display_comparison_view(self):
         """Display a side-by-side comparison of two iterations."""
@@ -112,12 +113,16 @@ class TimelineVisualization:
         col1, col2 = st.columns(2)
         with col1:
             st.text_area(f"Concept (Iteration {iter_a})",
-                         value=artwork_a.get("concept", ""),
-                         height=200)
+                value=artwork_a.get("concept", ""),
+                height=200,
+                key=f"compare_concept_a_{iter_a}")
+
         with col2:
             st.text_area(f"Concept (Iteration {iter_b})",
-                         value=artwork_b.get("concept", ""),
-                         height=200)
+                value=artwork_b.get("concept", ""),
+                height=200,
+                key=f"compare_concept_b_{iter_b}")
+
 
         st.subheader("Feedback and Analysis")
         col1, col2 = st.columns(2)
@@ -127,7 +132,8 @@ class TimelineVisualization:
                 st.text_area(f"Feedback (Iteration {iter_a})",
                              value=feedback_a,
                              height=200,
-                             disabled=True)
+                             disabled=True,
+                             key=f"compare_feedback_a_{iter_a}")
             else:
                 st.info(f"No feedback for Iteration {iter_a}")
         with col2:
@@ -136,7 +142,8 @@ class TimelineVisualization:
                 st.text_area(f"Feedback (Iteration {iter_b})",
                              value=feedback_b,
                              height=200,
-                             disabled=True)
+                             disabled=True,
+                             key=f"compare_feedback_b_{iter_b}")
             else:
                 st.info(f"No feedback for Iteration {iter_b}")
 

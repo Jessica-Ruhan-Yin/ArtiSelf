@@ -36,7 +36,7 @@ if st.button("Generate Artwork", type="primary"):
             col1, col2 = st.columns(2)
             with col1:
                 st.header("Refined Concept")
-                st.text_area(label="Refine Concept", value=refined_concept, height=512, label_visibility="collapsed")
+                st.text_area(label="Refined Concept", value=refined_concept, height=512, label_visibility="collapsed")
             with col2:
                 st.header("Generated Artwork")
                 try:
