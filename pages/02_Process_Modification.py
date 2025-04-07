@@ -22,6 +22,21 @@ def display_title():
         unsafe_allow_html=True
     )
 
+def get_created_artwork():
+    # Initialize art_history if it doesn't exist in session state
+    if "art_history" not in st.session_state:
+        st.session_state.art_history = []
+        
+    # Check if art_history is empty
+    if not st.session_state.art_history:
+        st.info("No artwork found. Please create an initial artwork before using modification.")
+        if st.button("Create Initial Artwork", use_container_width=True):
+            # Redirect to artwork creation page
+            st.switch_page("pages/01_Create_Artworks.py")
+        st.stop()
+    
+    return st.session_state.art_history[-1]
+
 # --- Artwork Display Functions ---
 def display_artwork(title, artwork):
     st.header(title)
@@ -112,7 +127,7 @@ def display_modification_result(result):
 def main():
     configure_page()
     display_title()
-    latest_artwork = st.session_state.art_history[-1]
+    latest_artwork = get_created_artwork()
     display_artwork("Current Artwork", latest_artwork)
     
     # Define modification options and their descriptions

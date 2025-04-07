@@ -44,7 +44,7 @@ def _process_modification(state: ModificationState, prompt: str, temperature: fl
     """
     client = get_llm()
     output = client.run(
-        "ibm-granite/granite-3.1-8b-instruct",
+        "ibm-granite/granite-3.2-8b-instruct",
         input={"prompt": prompt, "max_new_tokens": max_new_tokens, "temperature": temperature}
     )
     modified_concept = "".join(output) if isinstance(output, list) else str(output)
@@ -221,10 +221,21 @@ This should feel like a significant moment of creative growth and discovery, sim
 # IMAGE CREATION & STATE UPDATE
 # ===============================
 def create_image(state: ModificationState) -> ModificationState:
-    """Generate an image based on the refined concept and update state memory."""
+    """Generate an image based on the refined concept and update state memory.
+    
+    Uses text-to-image generation on the first iteration, and image-variation modification
+    on subsequent iterations to preserve visual continuity.
+    """
     concept = state["refined_concept"]
     image_generator = ImageGenerator()
-    image_url = image_generator.generate_image(concept)
+    
+    # Use text-to-image generation for the initial iteration or if there is no previous image.
+    if state["iteration"] == 0 or not state["current_image_url"]:
+        image_url = image_generator.generate_image(concept)
+    else:
+        # Apply image variation on the current image.
+        image_url = image_generator.modify_image(prompt=concept, base_image=state["current_image_url"])
+    
     state["current_image_url"] = image_url
     state["messages"].append(AIMessage(content=f"Generated image: {image_url}"))
     return update_memory(state)
