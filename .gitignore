@@ -5,3 +5,4 @@ __pycache__
 *.pyc
 collections/*
 !collections/.gitkeep
+!collections/README.md
