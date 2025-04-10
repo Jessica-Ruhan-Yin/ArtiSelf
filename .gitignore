@@ -3,3 +3,5 @@
 images/generated_images
 __pycache__
 *.pyc
+collections/*
+!collections/.gitkeep

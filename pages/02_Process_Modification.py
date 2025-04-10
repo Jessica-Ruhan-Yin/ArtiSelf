@@ -1,6 +1,6 @@
 import streamlit as st
 import os
-from styles.styles import style_global, style_custom, style_buttons
+from styles.styles import style_global, style_custom, style_buttons, create_artwork_styles
 from utils.modification_engine import generate_artwork_with_modification
 
 # --- Page Setup & Styling ---
@@ -12,7 +12,7 @@ def configure_page():
         initial_sidebar_state="expanded",
     )
     # Combine and apply global and custom styles
-    st.markdown(style_buttons + style_global + style_custom, unsafe_allow_html=True)
+    st.markdown(style_buttons + style_global + style_custom + create_artwork_styles, unsafe_allow_html=True)
 
 # --- Page Title & Introduction ---
 def display_title():
@@ -44,7 +44,7 @@ def display_artwork(title, artwork):
     with col1:
         st.markdown('<div class="concept-display">', unsafe_allow_html=True)
         st.subheader("Concept")
-        st.text_area(label="Concept", value=artwork["concept"], height=512, label_visibility="collapsed")
+        st.text_area(label="Concept", value=artwork["concept"], height=490, label_visibility="collapsed")
         st.markdown('</div>', unsafe_allow_html=True)
     with col2:
         st.markdown('<div class="artwork-display">', unsafe_allow_html=True)
@@ -115,13 +115,22 @@ def display_modification_result(result):
     col1, col2 = st.columns(2)
     with col1:
         st.header("Modified Concept")
-        st.text_area(label="Refined Concept", value=result["refined_concept"], height=512, label_visibility="collapsed")
+        st.text_area(label="Refined Concept", value=result["refined_concept"], height=500, label_visibility="collapsed")
     with col2:
         st.header("New Artwork")
         if os.path.exists(result["current_image_url"]):
             st.image(result["current_image_url"], caption=f"Iteration {result['iteration']}")
         else:
             st.warning("Image file not found. Please try again.")
+    
+    st.markdown(
+        """
+        <div class="creative-tip">
+            <strong>Creative Tip:</strong> To continue making process modifications on this artwork, select a new strategy from
+            the list above. You can also add your own creative direction to guide the AI.
+        </div>
+        """, unsafe_allow_html=True
+    )
 
 # --- Main Function ---
 def main():

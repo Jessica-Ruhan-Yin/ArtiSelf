@@ -493,3 +493,78 @@ create_artwork_styles = """
 }
 </style>
 """
+
+collection_styles = """
+<style>
+.collection-card {
+    background: white;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    margin-bottom: 10px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.collection-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+}
+.collection-meta {
+    color: #666;
+    font-size: 0.8rem;
+    margin-bottom: 10px;
+}
+.collection-desc {
+    color: #333;
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+    max-height: 60px;
+    overflow: hidden;
+}
+.collection-count {
+    color: #9271D3;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+.thumbnail-container {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 15px;
+    position: relative;
+}
+.thumbnail-container img {
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.evolution-arrow {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    text-align: center;
+    color: rgba(146, 113, 211, 0.7);
+    font-size: 1.5rem;
+    z-index: 2;
+    pointer-events: none;
+}
+.delete-dialog-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.delete-dialog {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+}
+</style>
+"""
